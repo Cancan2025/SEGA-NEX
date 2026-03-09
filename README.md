@@ -22,7 +22,8 @@ SEGA NEX is fanmade video game console os with 2006 vibe. It’s the "What If?" 
 
 ## 🔍 What is SEGA NEX Exactly?
 
-What is SEGA NEX
+SEGA NEX is a fan-made operating system concept for a fictional SEGA video game console.
+The project explores the idea of what a SEGA console from the seventh generation (around 2006) might have looked like if SEGA had continued making hardware.
 
 ## 🌀 Why I wanted to make a fan-made OS?
 
