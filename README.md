@@ -31,7 +31,16 @@ While I was learning Python and other programming languages, I wanted to create 
 
 ## 🚀 Development Status
 
+This os isn't fully released yet.
+I am currently working on v0.1.x
+
+There will be startup scene only. Games and more will released on v0.2.x or later.
+
 ## 🛠️ How I Created it?
+
+I am rookie (but skilled) programmer but i am not learned C++ or something, so i am using ChatGPT, I have no time to mastering C++ by learning C++, talk about montage or something. I Named things and set things like music and audio by getting help by ChatGPT.
+
+All thanks to ChatGPT.
 
 ## 📝 Note
 
