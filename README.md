@@ -26,7 +26,7 @@ What is SEGA NEX
 
 ## 🎮 Why I wanted to make a fan-made OS?
 
-While I Learning Python and other codes, i want fanmade os, i don't know what pc os should i? so i decided to make fanmade video game console os, then i selected sega, I Wanted sega video game console os, but its not modern era, its seventh generation era which is there is xbox 360, PS3 and Wii, its also In memory of Sega console creator Hideki Sato, I heard "he passed away in 2026 Feburary 13" after i started planing fanmade sega console os, so Making Fanmade SEGA Video game console os is sounds great for me.
+While I was learning Python and other programming languages, I wanted to create a fanmade OS, but I wasn’t sure which PC OS to use. Then I decided to make a fanmade video game console OS, and I chose Sega. I wanted it to be a Sega video game console OS, but set in the seventh-generation era, alongside the Xbox 360, PS3, and Wii. It’s also in memory of Sega’s console creator, Hideki Sato, I was heard "he passed away on February 13, 2026" after I started planning the fanmade Sega console OS. So creating a fanmade Sega video game console OS sounded perfect for me.
 
 ## 🚀 Development Status
 
