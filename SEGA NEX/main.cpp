@@ -37,18 +37,53 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Dosya isimleri
-    SDL_Texture* phase1 = IMG_LoadTexture(renderer, "Images/SEGA NEX Startup Screen - Phase 1.png");
-    SDL_Texture* phase2 = IMG_LoadTexture(renderer, "Images/SEGA NEX Startup Screen - Phase 2.png");
+    // BASE PATH
+    char* basePath = SDL_GetBasePath();
 
-    if (!phase1 || !phase2) {
-        std::cout << "Texture load error: " << IMG_GetError() << std::endl;
+    if (!basePath)
+    {
+        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << std::endl;
         return 1;
     }
 
-    Mix_Chunk* bootSound = Mix_LoadWAV("C:\\Users\\User\\Downloads\\SEGA NEX\\Sounds\\SEGA NEX Startup Sound.wav");
-    if (!bootSound) {
+    std::string BASE_PATH = basePath;
+    SDL_free(basePath);
+
+    // Asset path helper (lambda captures BASE_PATH)
+    auto GetAssetPath = [&](const std::string& file) {
+        return BASE_PATH + "assets/" + file;
+    };
+
+    // Dosya yolları
+    std::string phase1Path = GetAssetPath("images/startup1.png");
+    std::string phase2Path = GetAssetPath("images/startup2.png");
+    std::string soundPath = GetAssetPath("sounds/startup.wav");
+
+    // Texture yükle
+    SDL_Texture* phase1 = IMG_LoadTexture(renderer, phase1Path.c_str());
+    SDL_Texture* phase2 = IMG_LoadTexture(renderer, phase2Path.c_str());
+
+    if (!phase1)
+    {
+        std::cout << "Texture load error: " << IMG_GetError() << std::endl;
+        std::cout << "Tried: " << phase1Path << std::endl;
+        return 1;
+    }
+
+    if (!phase2)
+    {
+        std::cout << "Texture load error: " << IMG_GetError() << std::endl;
+        std::cout << "Tried: " << phase2Path << std::endl;
+        return 1;
+    }
+
+    // Ses yükle
+    Mix_Chunk* bootSound = Mix_LoadWAV(soundPath.c_str());
+
+    if (!bootSound)
+    {
         std::cout << "Sound load error: " << Mix_GetError() << std::endl;
+        std::cout << "Tried: " << soundPath << std::endl;
         return 1;
     }
 
@@ -70,12 +105,12 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // 0–2 saniye arası beyaz ekran
+        // 0–2 saniye arası siyah ekran
         if (elapsed < 2000) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
             SDL_RenderClear(renderer);
         }
-        // 2–4 saniye arası beyaz de devam eder
+        // 2–4 saniye arası beyaz ekran
         else if (elapsed < 4000) {
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
             SDL_RenderClear(renderer);

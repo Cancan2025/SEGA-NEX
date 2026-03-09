@@ -114,6 +114,9 @@
       <AdditionalDependencies>SDL2.lib;
 SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /Y "$(ProjectDir)..\assets" "$(OutDir)assets\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,6 +136,9 @@ SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</Additional
       <AdditionalDependencies>SDL2.lib;
 SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /Y "$(ProjectDir)..\assets" "$(OutDir)assets\"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
