@@ -13,18 +13,18 @@ SEGA NEX is fanmade video game console os with 2006 vibe. It’s the "What If?" 
 
 ### 📂 Contents
 * [🔍 What is SEGA NEX Exactly?](#-what-is-sega-nex-exactly)
-* [🎮 Why I wanted to make a fanmade OS?](#-why-i-wanted-to-make-a-fanmade-os)
+* [🌀 Why I wanted to make a fanmade OS?](#-why-i-wanted-to-make-a-fanmade-os)
 * [🚀 Development Status](#-development-status)
 * [🛠️ How I Created?](#-how-i-created)
 * [📝 Note](#-note)
 
 ---
 
-## 🌀 What is SEGA NEX Exactly?
+## 🔍 What is SEGA NEX Exactly?
 
 What is SEGA NEX
 
-## 🎮 Why I wanted to make a fan-made OS?
+## 🌀 Why I wanted to make a fan-made OS?
 
 While I was learning Python and other programming languages, I wanted to create a fanmade OS, but I wasn’t sure which PC OS to use. Then I decided to make a fanmade video game console OS, and I chose Sega. I wanted it to be a Sega video game console OS, but set in the seventh-generation era, alongside the Xbox 360, PS3, and Wii. It’s also in memory of Sega’s console creator, Hideki Sato, I was heard "he passed away on February 13, 2026" after I started planning the fanmade Sega console OS. So creating a fanmade Sega video game console OS sounded perfect for me.
 
