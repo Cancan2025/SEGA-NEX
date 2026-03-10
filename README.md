@@ -4,7 +4,7 @@
 
 ---
 
-SEGA NEX is fan-made video game console OS with 2006 vibe. It’s the "What If?" project for the seventh generation of gaming. The seventh generation saw the release of Microsoft’s Xbox 360, Sony’s PlayStation 3, and Nintendo’s Wii. But what about... SEGA’s game console?  Missing that piece of history? Then it’s time to go to the NEX Level.
+SEGA NEX is fan-made video game console OS with 2006 vibe. It's the "What If?" project for the seventh generation of gaming. The seventh generation saw the release of Microsoft's Xbox 360, Sony's PlayStation 3, and Nintendo's Wii. But what about... SEGA's game console?  Missing that piece of history? Then it's time to go to the NEX Level.
 
 > [!IMPORTANT]
 > This is a non-profit fan project. SEGA NEX is not affiliated with or endorsed by SEGA Corporation.
@@ -13,7 +13,7 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It’s the "What If?"
 
 ### 📂 Contents
 * [🔍 What is SEGA NEX Exactly?](#what-is-sega-nex-exactly)
-* [🌀 Why did I want to make a fan‑made OS?](#why-did-i-want-to-make-a-fan-made-os)
+* [🌀 Why did I want to make a fan‑made OS?](#why-did-i-want-to-make-a-fanmade-os)
 * [🚀 Development Status](#development-status)
 * [🛠️ How I Created It](#how-i-created-it)
 * [📝 Note](#note)
@@ -27,7 +27,7 @@ The project explores the idea of what a SEGA console from the seventh generation
 
 ## 🌀 Why did I want to make a fan‑made OS?
 
-While I was learning Python and other programming languages, I wanted to create a fan-made OS, but I wasn’t sure which PC OS to use. Then I decided to make a fan-made video game console OS, and I chose Sega. I wanted it to be a Sega video game console OS, but set in the seventh-generation era, alongside the Xbox 360, PS3, and Wii. It’s also in memory of Sega’s console creator, Hideki Sato, I was heard "he passed away on February 13, 2026" after I started planning the fan-made Sega console OS. So creating a fan-made Sega video game console OS sounded perfect for me.
+While I was learning Python and other programming languages, I wanted to create a fan-made OS, but I wasn't sure which PC OS to use. Then I decided to make a fan-made video game console OS, and I chose Sega. I wanted it to be a Sega video game console OS, but set in the seventh-generation era, alongside the Xbox 360, PS3, and Wii. It's also in memory of Sega's console creator, Hideki Sato, I was heard "he passed away on February 13, 2026" after I started planning the fan-made Sega console OS. So creating a fan-made Sega video game console OS sounded perfect for me.
 
 ## 🚀 Development Status
 
