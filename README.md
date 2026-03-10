@@ -4,7 +4,7 @@
 
 ---
 
-SEGA NEX is fan-made video game console OS with 2006 vibe. It's the "What If?" project for the seventh generation of gaming. The seventh generation saw the release of Microsoft's Xbox 360, Sony's PlayStation 3, and Nintendo's Wii. But what about... SEGA's game console?  Missing that piece of history? Then it's time to go to the NEX Level.
+SEGA NEX is fan-made video game console OS with 2006 vibe. It's the "What If?" project for the seventh generation of gaming. The seventh generation saw the release of Microsoft's Xbox 360, Sony's PlayStation 3, and Nintendo's Wii. But what about... SEGA's game console?  Missing that piece of history? Then it’s time to go to the NEX Level.
 
 > [!IMPORTANT]
 > This is a non-profit fan project. SEGA NEX is not affiliated with or endorsed by SEGA Corporation.
@@ -13,7 +13,7 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the "What If?" p
 
 ### 📂 Contents
 * [🔍 What is SEGA NEX Exactly?](#what-is-sega-nex-exactly)
-* [🌀 Why did I want to make a fan‑made OS?](#why-did-i-want-to-make-a-fanmade-os)
+* [🌀 Why did I want to make a fan‑made OS?](#why-did-i-want-to-make-a-fan-made-os)
 * [🚀 Development Status](#development-status)
 * [🛠️ How I Created It](#how-i-created-it)
 * [📝 Note](#note)
