@@ -47,7 +47,7 @@ I mainly decide things like names, music, and audio, and I get help from ChatGPT
 
 I also asked ChatGPT for suggestions about naming things and deciding what exactly I should implement and how the system should work.
 
-All thanks to ChatGPT.
+All thanks to ChatGPT. (and other things, such as AI modules and tools)
 
 ## 📝 Note
 
