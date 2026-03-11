@@ -12,6 +12,7 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 ---
 
 ### 📂 Contents
+* [🖥️ System Requirements](#-system-requirements)
 * [🔍 What is SEGA NEX Exactly?](#-what-is-sega-nex-exactly)
 * [🌀 Why I wanted to make a fan‑made OS?](#-why-i-wanted-to-make-a-fanmade-os)
 * [🚀 Development Status](#-development-status)
@@ -19,6 +20,14 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 * [📝 Note](#-note)
 
 ---
+
+## 🖥️ System Requirements
+
+- CPU: ⚡ 1.2 GHz dual-core | ✅ 2 GHz dual-core or higher
+- RAM: ⚡ 1 GB | ✅ 2–4 GB
+- Storage: ⚡ 16–20 GB free | ✅ 32 GB free or more
+- GPU: ⚡ Basic integrated GPU (DirectX 9 / OpenGL 2+) | ✅ Modern integrated or dedicated GPU
+- Display: ⚡ 1280×720, 16:9 | ✅ 1280×720 or higher, 16:9
 
 ## 🔍 What is SEGA NEX Exactly?
 
