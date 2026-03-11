@@ -18,6 +18,7 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 * [🚀 Development Status](#-development-status)
 * [🛠️ How I Created It](#️-how-i-created-it)
 * [📝 Note](#-note)
+* [👤 Credits](#-credits)
 
 ---
 
@@ -70,3 +71,7 @@ The project may change over time as development continues.
 And I also created this README with help from **ChatGPT.**
 
 *(Sorry if my English is not very good.)*
+
+## 👤 Credits
+
+All images, sounds, and everything created by **@Cancan2025**.
