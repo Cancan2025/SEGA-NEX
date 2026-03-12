@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="1000" height="500" alt="SEGA_NEX_README_IMAGE" src="https://github.com/user-attachments/assets/f8ac3d85-5b5c-441f-9da8-2596b4e6b147" />
+  <img width="1500" height="1000" alt="SEGA_NEX_README_IMAGE" src="https://github.com/user-attachments/assets/c37a5a3c-5913-4cf0-bc66-53bfd5b7b540" />
 </p>
 
 ---
