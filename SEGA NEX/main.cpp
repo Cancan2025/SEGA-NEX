@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
     };
 
     // Dosya yolları
-    std::string phase1Path = GetAssetPath("images/startup1.png");
-    std::string phase2Path = GetAssetPath("images/startup2.png");
+    std::string phase1Path = GetAssetPath("images/startup_test.png");
+    std::string phase2Path = GetAssetPath("images/startup.png");
     std::string soundPath = GetAssetPath("sounds/startup.wav");
 
     // Texture yükle

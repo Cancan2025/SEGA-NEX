@@ -108,7 +108,7 @@
       <AdditionalIncludeDirectories>C:\Users\User\Downloads\SEGA NEX\SDL2-devel-2.32.10-VC\SDL2-2.32.10\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\User\Downloads\SEGA NEX\SDL2-devel-2.32.10-VC\SDL2-2.32.10\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;
@@ -130,7 +130,7 @@ SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</Additional
       <AdditionalIncludeDirectories>C:\Users\User\Downloads\SEGA NEX\SDL2-devel-2.32.10-VC\SDL2-2.32.10\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\User\Downloads\SEGA NEX\SDL2-devel-2.32.10-VC\SDL2-2.32.10\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;
@@ -145,6 +145,16 @@ SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</Additional
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SEGA NEX.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="seganex.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

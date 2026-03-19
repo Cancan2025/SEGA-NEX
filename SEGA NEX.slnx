@@ -3,5 +3,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="SEGA NEX/SEGA NEX.vcxproj" Id="ec2fbc59-a680-4d57-baa8-14f199e87a3a" />
+  <Project Path="SEGA NEX/SEGA NEX.vcxproj" Id="ec2fbc59-a680-4d57-baa8-14f199e87a3a">
+    <BuildType Project="Release" />
+  </Project>
 </Solution>
