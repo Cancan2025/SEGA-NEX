@@ -1,157 +1,199 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_syswm.h>
+#include <vlc/vlc.h>
+
 #include <iostream>
+#include <string>
 
 int main(int argc, char* argv[])
 {
-    // Başlatma
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-        std::cout << "SDL init error: " << SDL_GetError() << std::endl;
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0) {
+        std::cout << "SDL init error: " << SDL_GetError() << "\n";
         return 1;
     }
 
-    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-        std::cout << "IMG init error: " << IMG_GetError() << std::endl;
-        return 1;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
-        std::cout << "Mixer init error: " << Mix_GetError() << std::endl;
-        return 1;
-    }
-
-    SDL_Window* window = SDL_CreateWindow("SEGA NEX",
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        1280, 720, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow(
+        "SEGA NEX",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        1280,
+        720,
+        SDL_WINDOW_SHOWN
+    );
 
     if (!window) {
-        std::cout << "Window error: " << SDL_GetError() << std::endl;
+        std::cout << "Window error: " << SDL_GetError() << "\n";
+        SDL_Quit();
         return 1;
     }
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(
+        window,
+        -1,
+        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+
     if (!renderer) {
-        std::cout << "Renderer error: " << SDL_GetError() << std::endl;
+        std::cout << "Renderer error: " << SDL_GetError() << "\n";
+        SDL_DestroyWindow(window);
+        SDL_Quit();
         return 1;
     }
 
-    // BASE PATH
-    char* basePath = SDL_GetBasePath();
-
-    if (!basePath)
-    {
-        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    std::string BASE_PATH = basePath;
-    SDL_free(basePath);
-
-    // Asset path helper (lambda captures BASE_PATH)
-    auto GetAssetPath = [&](const std::string& file) {
-        return BASE_PATH + "assets/" + file;
-    };
-
-    // Dosya yolları
-    std::string phase1Path = GetAssetPath("images/startup_test.png");
-    std::string phase2Path = GetAssetPath("images/startup.png");
-    std::string soundPath = GetAssetPath("sounds/startup.wav");
-
-    // Texture yükle
-    SDL_Texture* phase1 = IMG_LoadTexture(renderer, phase1Path.c_str());
-    SDL_Texture* phase2 = IMG_LoadTexture(renderer, phase2Path.c_str());
-
-    if (!phase1)
-    {
-        std::cout << "Texture load error: " << IMG_GetError() << std::endl;
-        std::cout << "Tried: " << phase1Path << std::endl;
-        return 1;
-    }
-
-    if (!phase2)
-    {
-        std::cout << "Texture load error: " << IMG_GetError() << std::endl;
-        std::cout << "Tried: " << phase2Path << std::endl;
-        return 1;
-    }
-
-    // Ses yükle
-    Mix_Chunk* bootSound = Mix_LoadWAV(soundPath.c_str());
-
-    if (!bootSound)
-    {
-        std::cout << "Sound load error: " << Mix_GetError() << std::endl;
-        std::cout << "Tried: " << soundPath << std::endl;
-        return 1;
-    }
-
-    Uint32 startTime = SDL_GetTicks();
-    bool quit = false;
-    bool soundPlayed = false;
+    // 2 saniye siyah ekran
+    Uint32 blackStart = SDL_GetTicks();
     SDL_Event e;
+    bool quit = false;
 
-    while (!quit)
-    {
+    while (!quit && SDL_GetTicks() - blackStart < 2000) {
         while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT)
+            if (e.type == SDL_QUIT) {
                 quit = true;
+            }
         }
 
-        Uint32 elapsed = SDL_GetTicks() - startTime;
-
-        // Temizle
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-
-        // 0–2 saniye arası siyah ekran
-        if (elapsed < 2000) {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderClear(renderer);
-        }
-        // 2–4 saniye arası beyaz ekran
-        else if (elapsed < 4000) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-            SDL_RenderClear(renderer);
-        }
-        // 4 saniyede sesi başlat
-        if (elapsed >= 4000 && !soundPlayed) {
-            Mix_PlayChannel(-1, bootSound, 0);
-            soundPlayed = true;
-        }
-
-        if (elapsed >= 4000)
-        {
-            float progress = (elapsed - 4000) / 500.0f;
-            if (progress > 1.0f) progress = 1.0f;
-
-            int alpha = (int)(progress * 255);
-
-            SDL_SetTextureAlphaMod(phase1, alpha);
-            SDL_RenderCopy(renderer, phase1, NULL, NULL);
-        }
-
-        // 5 saniyeden sonra → phase2 direkt üstüne göster
-        if (elapsed >= 5000)
-        {
-            SDL_RenderCopy(renderer, phase2, NULL, NULL);
-        }
-
         SDL_RenderPresent(renderer);
-        SDL_Delay(16);
+        SDL_Delay(10);
     }
 
-    // Temizlik
-    SDL_DestroyTexture(phase1);
-    SDL_DestroyTexture(phase2);
-    Mix_FreeChunk(bootSound);
+    if (quit) {
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 0;
+    }
+
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+
+    if (!SDL_GetWindowWMInfo(window, &wmInfo)) {
+        std::cout << "SDL_GetWindowWMInfo error: " << SDL_GetError() << "\n";
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+#ifdef _WIN32
+    void* hwnd = wmInfo.info.win.window;
+#else
+    std::cout << "This example is for Windows.\n";
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    return 1;
+#endif
+
+    char* basePath = SDL_GetBasePath();
+    if (!basePath) {
+        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << "\n";
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    std::string videoPath = std::string(basePath) + "assets/videos/startup.mp4";
+    SDL_free(basePath);
+
+    const char* vlcArgs[] = {
+        "--no-video-title-show",
+        "--quiet"
+    };
+
+    libvlc_instance_t* vlc = libvlc_new(2, vlcArgs);
+    if (!vlc) {
+        std::cout << "libvlc_new failed\n";
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    libvlc_media_t* media = libvlc_media_new_path(vlc, videoPath.c_str());
+    if (!media) {
+        std::cout << "libvlc_media_new_path failed: " << videoPath << "\n";
+        libvlc_release(vlc);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    libvlc_media_player_t* player = libvlc_media_player_new_from_media(media);
+    libvlc_media_release(media);
+
+    if (!player) {
+        std::cout << "libvlc_media_player_new_from_media failed\n";
+        libvlc_release(vlc);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    libvlc_media_player_set_hwnd(player, hwnd);
+    libvlc_video_set_scale(player, 0.0f);
+
+    if (libvlc_media_player_play(player) != 0) {
+        std::cout << "libvlc_media_player_play failed\n";
+        libvlc_media_player_release(player);
+        libvlc_release(vlc);
+        SDL_DestroyRenderer(renderer);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 1;
+    }
+
+    bool videoStarted = false;
+    Uint32 startWait = SDL_GetTicks();
+
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        libvlc_state_t state = libvlc_media_player_get_state(player);
+
+        if (state == libvlc_Playing) {
+            videoStarted = true;
+        }
+
+        if (videoStarted &&
+            (state == libvlc_Ended || state == libvlc_Stopped || state == libvlc_Error)) {
+            break;
+        }
+
+        if (!videoStarted && SDL_GetTicks() - startWait > 5000) {
+            std::cout << "Video did not start in time: " << videoPath << "\n";
+            break;
+        }
+
+        SDL_Delay(10);
+    }
+
+    libvlc_media_player_stop(player);
+    libvlc_media_player_release(player);
+    libvlc_release(vlc);
+
+    while (!quit) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        SDL_RenderClear(renderer);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(10);
+    }
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-
-    Mix_CloseAudio();
-    IMG_Quit();
     SDL_Quit();
     return 0;
 }

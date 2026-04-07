@@ -22,9 +22,6 @@
     <ClInclude Include="resource.h">
       <Filter>Üst Bilgi Dosyaları</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>Üst Bilgi Dosyaları</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SEGA NEX.rc" />
