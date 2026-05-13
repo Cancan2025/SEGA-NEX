@@ -28,8 +28,8 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 - **CPU**: ⚡ 1.2 GHz dual-core | ✅ 2.0 GHz dual-core or higher
 - **RAM**: ⚡ 2 GB | ✅ 4 GB
 - **Storage**: ⚡ 500 MB free space | ✅ 1 GB free or more
-- **GPU**: ⚡ Integrated graphics (DirectX 9 / OpenGL 2+) | ✅ Modern integrated or dedicated GPU
-- **Display**: ⚡ 1280×720, 16:9 | ✅ 1280×720 or higher, 16:9
+- **GPU**: ⚡ Integrated graphics (OpenGL 2.1 / DirectX 11 compatible) | ✅ Modern integrated or dedicated GPU
+- **Display**: ⚡ 640×480, 4:3 | ✅ 1280×720 or higher, 16:9
 - **Runtime**: Microsoft Visual C++ 2015–2022 Redistributable
 
 ## 🔍 What is SEGA NEX Exactly?
