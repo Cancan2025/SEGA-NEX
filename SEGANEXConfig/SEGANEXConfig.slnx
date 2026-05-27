@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="SEGANEXConfig.csproj" Id="3da2b37d-013e-4005-9d34-1a75accdf0b5">
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
+</Solution>

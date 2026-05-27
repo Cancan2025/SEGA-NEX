@@ -1,199 +1,190 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 #include <vlc/vlc.h>
-
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <vector>
+#include <mutex>
+#include <nlohmann/json.hpp>
 
-int main(int argc, char* argv[])
-{
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER) != 0) {
-        std::cout << "SDL init error: " << SDL_GetError() << "\n";
-        return 1;
+using json = nlohmann::json;
+
+struct VideoContext {
+    SDL_Renderer* renderer;
+    SDL_Texture* texture;
+    std::vector<uint32_t> pixels;
+    std::mutex mutex;
+    int videoWidth, videoHeight;
+};
+
+static void* lock(void* data, void** p_pixels) {
+    VideoContext* ctx = (VideoContext*)data;
+    ctx->mutex.lock();
+    *p_pixels = ctx->pixels.data();
+    return NULL;
+}
+
+static void unlock(void* data, void* id, void* const* p_pixels) {
+    VideoContext* ctx = (VideoContext*)data;
+    ctx->mutex.unlock();
+}
+
+int main(int argc, char* argv[]) {
+    // --- 1. SDL Temel Kurulumu ---
+    // Path (yol) alabilmek için SDL'i en başta başlatıyoruz.
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
+        return -1;
     }
 
-    SDL_Window* window = SDL_CreateWindow(
-        "SEGA NEX",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        1280,
-        720,
-        SDL_WINDOW_SHOWN
-    );
-
-    if (!window) {
-        std::cout << "Window error: " << SDL_GetError() << "\n";
-        SDL_Quit();
-        return 1;
-    }
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(
-        window,
-        -1,
-        SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-    );
-
-    if (!renderer) {
-        std::cout << "Renderer error: " << SDL_GetError() << "\n";
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-    // 2 saniye siyah ekran
-    Uint32 blackStart = SDL_GetTicks();
-    SDL_Event e;
-    bool quit = false;
-
-    while (!quit && SDL_GetTicks() - blackStart < 2000) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
-        SDL_Delay(10);
-    }
-
-    if (quit) {
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 0;
-    }
-
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
-
-    if (!SDL_GetWindowWMInfo(window, &wmInfo)) {
-        std::cout << "SDL_GetWindowWMInfo error: " << SDL_GetError() << "\n";
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-#ifdef _WIN32
-    void* hwnd = wmInfo.info.win.window;
-#else
-    std::cout << "This example is for Windows.\n";
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 1;
-#endif
-
+    // Uygulamanın çalıştığı ana dizini alıyoruz
     char* basePath = SDL_GetBasePath();
-    if (!basePath) {
-        std::cout << "SDL_GetBasePath error: " << SDL_GetError() << "\n";
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
+    std::string baseDir = basePath ? std::string(basePath) : "./";
+
+    // --- 2. Dinamik Config Okuma ---
+    std::string configPath = baseDir + "config/config.json";
+    std::string screenType = "16:9 (720p - 1280x720)";
+    bool isFullscreen = false;
+
+    std::ifstream configFile(configPath);
+    if (configFile.is_open()) {
+        try {
+            json config;
+            configFile >> config;
+            if (config.contains("screenType")) screenType = config["screenType"].get<std::string>();
+            if (config.contains("fullscreen")) isFullscreen = config["fullscreen"].get<bool>();
+        }
+        catch (...) {
+            std::cerr << "Config dosyasi okunurken hata olustu, varsayilanlar kullaniliyor." << std::endl;
+        }
+        configFile.close();
     }
 
-    std::string videoPath = std::string(basePath) + "assets/videos/startup.mp4";
-    SDL_free(basePath);
+    // Ayarlara göre değişkenleri belirle
+    int baseW = 1280, baseH = 720;
+    bool isInterlaced = false;
+    std::string videoFilename = "startup.mp4";
 
-    const char* vlcArgs[] = {
-        "--no-video-title-show",
-        "--quiet"
-    };
+    if (screenType == "4:3 (480i - 640x480 interlaced)") {
+        baseW = 640; baseH = 480;
+        isInterlaced = true;
+        videoFilename = "startup_sd.mp4";
+    }
 
+    // --- 3. Pencere ve Renderer Oluşturma ---
+    Uint32 windowFlags = SDL_WINDOW_SHOWN;
+    if (isFullscreen) windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+    SDL_Window* window = SDL_CreateWindow("SEGA NEX", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, baseW, baseH, windowFlags);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    VideoContext ctx;
+    ctx.renderer = renderer;
+    ctx.videoWidth = baseW;
+    ctx.videoHeight = baseH;
+    ctx.pixels.resize(baseW * baseH);
+    ctx.texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, baseW, baseH);
+
+    // --- 4. VLC Kurulumu ---
+    std::string videoPath = baseDir + "assets/videos/" + videoFilename;
+
+    // basePath ile işimiz bitti, belleği boşaltıyoruz
+    if (basePath) SDL_free(basePath);
+
+    const char* vlcArgs[] = { "--no-video-title-show", "--quiet" };
     libvlc_instance_t* vlc = libvlc_new(2, vlcArgs);
-    if (!vlc) {
-        std::cout << "libvlc_new failed\n";
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
     libvlc_media_t* media = libvlc_media_new_path(vlc, videoPath.c_str());
-    if (!media) {
-        std::cout << "libvlc_media_new_path failed: " << videoPath << "\n";
-        libvlc_release(vlc);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-    libvlc_media_player_t* player = libvlc_media_player_new_from_media(media);
+    libvlc_media_player_t* mp = libvlc_media_player_new_from_media(media);
     libvlc_media_release(media);
 
-    if (!player) {
-        std::cout << "libvlc_media_player_new_from_media failed\n";
-        libvlc_release(vlc);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
+    libvlc_video_set_callbacks(mp, lock, unlock, NULL, &ctx);
+    libvlc_video_set_format(mp, "RV32", baseW, baseH, baseW * 4);
 
-    libvlc_media_player_set_hwnd(player, hwnd);
-    libvlc_video_set_scale(player, 0.0f);
+    // --- 5. Zamanlama ve Durum Değişkenleri ---
+    bool videoBittiMi = false;
+    bool vlcDurduruldu = false;
+    bool videoBasladiMi = false;
+    Uint32 baslangicZamani = SDL_GetTicks();
 
-    if (libvlc_media_player_play(player) != 0) {
-        std::cout << "libvlc_media_player_play failed\n";
-        libvlc_media_player_release(player);
-        libvlc_release(vlc);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
+    bool quit = false;
+    SDL_Event ev;
 
-    bool videoStarted = false;
-    Uint32 startWait = SDL_GetTicks();
-
+    // --- 6. Ana Render Döngüsü ---
     while (!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
+        while (SDL_PollEvent(&ev)) {
+            if (ev.type == SDL_QUIT) quit = true;
         }
 
-        libvlc_state_t state = libvlc_media_player_get_state(player);
-
-        if (state == libvlc_Playing) {
-            videoStarted = true;
+        // İlk 2 saniye bekleme mantığı
+        if (!videoBasladiMi && SDL_GetTicks() - baslangicZamani >= 2000) {
+            libvlc_media_player_play(mp);
+            videoBasladiMi = true;
         }
 
-        if (videoStarted &&
-            (state == libvlc_Ended || state == libvlc_Stopped || state == libvlc_Error)) {
-            break;
-        }
+        int renderW, renderH;
+        SDL_GetRendererOutputSize(renderer, &renderW, &renderH);
 
-        if (!videoStarted && SDL_GetTicks() - startWait > 5000) {
-            std::cout << "Video did not start in time: " << videoPath << "\n";
-            break;
-        }
-
-        SDL_Delay(10);
-    }
-
-    libvlc_media_player_stop(player);
-    libvlc_media_player_release(player);
-    libvlc_release(vlc);
-
-    while (!quit) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
-
+        // Ekranı temizle (Siyah zemin)
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+
+        libvlc_state_t state = libvlc_media_player_get_state(mp);
+
+        // Video çizimi
+        if (videoBasladiMi && !videoBittiMi && state != libvlc_Ended && state != libvlc_Stopped && state != libvlc_Error) {
+
+            float screenAspect = (float)renderW / renderH;
+            float videoAspect = (float)baseW / baseH;
+            SDL_Rect destRect;
+
+            if (screenAspect > videoAspect) {
+                destRect.h = renderH;
+                destRect.w = (int)(renderH * videoAspect);
+                destRect.x = (renderW - destRect.w) / 2;
+                destRect.y = 0;
+            }
+            else {
+                destRect.w = renderW;
+                destRect.h = (int)(renderW / videoAspect);
+                destRect.x = 0;
+                destRect.y = (renderH - destRect.h) / 2;
+            }
+
+            ctx.mutex.lock();
+            SDL_UpdateTexture(ctx.texture, NULL, ctx.pixels.data(), baseW * 4);
+            ctx.mutex.unlock();
+            SDL_RenderCopy(renderer, ctx.texture, NULL, &destRect);
+        }
+
+        // Interlaced (Tarama Çizgisi) Efekti
+        if (isInterlaced) {
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 120);
+            for (int y = 0; y < renderH; y += 2) {
+                SDL_RenderDrawLine(renderer, 0, y, renderW, y);
+            }
+        }
+
         SDL_RenderPresent(renderer);
+
+        // VLC Güvenli Durdurma
+        if (state == libvlc_Ended && !vlcDurduruldu) {
+            videoBittiMi = true;
+            libvlc_media_player_stop(mp);
+            vlcDurduruldu = true;
+        }
+
         SDL_Delay(10);
     }
 
+    // --- 7. Kapanış ve Temizlik ---
+    libvlc_media_player_stop(mp);
+    libvlc_media_player_release(mp);
+    libvlc_release(vlc);
+    SDL_DestroyTexture(ctx.texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
     return 0;
 }
