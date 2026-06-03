@@ -13,6 +13,7 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 
 ### 📂 Contents
 * [🖥️ System Requirements](#%EF%B8%8F-system-requirements)
+* [📸 Screenshots](#-screenshots)
 * [🔍 What is SEGA NEX Exactly?](#-what-is-sega-nex-exactly)
 * [🌀 Why I wanted to make a fan‑made OS?](#-why-i-wanted-to-make-a-fanmade-os)
 * [🚀 Development Status](#-development-status)
@@ -31,6 +32,10 @@ SEGA NEX is fan-made video game console OS with 2006 vibe. It's the **"What If?"
 - **GPU**: ⚡ Integrated graphics (OpenGL 2.1 / DirectX 11 compatible) | ✅ Modern integrated or dedicated GPU
 - **Display**: ⚡ 640×480, 4:3 | ✅ 1280×720 or higher, 16:9
 - **Runtime**: Microsoft Visual C++ 2015–2022 Redistributable
+
+## 📸 Screenshots
+
+I Almost
 
 ## 🔍 What is SEGA NEX Exactly?
 
