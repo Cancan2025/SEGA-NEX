@@ -42,17 +42,17 @@ I forgot to add **screenshots** for this fanmade OS since **v0.1.0.**
 Without **screenshots,** there is no way to preview **SEGA NEX**
 and its features before downloading and running the software.
 
-### SEGA NEX — 16:9 (720p)
+### - SEGA NEX — 16:9 (720p)
 
 <img width="1282" height="752" alt="sega-nex-16-9" src="https://github.com/user-attachments/assets/59fadd21-bb2d-427e-a9c5-633542e5d550" />
 
 
-### SEGA NEX — 4:3 (640×480 Interlaced)
+### - SEGA NEX — 4:3 (640×480 Interlaced)
 
 <img width="642" height="512" alt="sega-nex-4-3i" src="https://github.com/user-attachments/assets/b7bac509-2d43-4e35-a294-3dc8c20fcaef" />
 
 
-### SEGANEXConfig
+### - SEGANEXConfig
 
 <img width="386" height="193" alt="seganexconfig" src="https://github.com/user-attachments/assets/204690be-3c38-4fd5-8d77-97b68ec94b9b" />
 
