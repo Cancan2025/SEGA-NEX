@@ -97,7 +97,7 @@ The project may change over time as development continues.
 
 And I also created this README with help from **ChatGPT.**
 
-*(Sorry if my English is not very good.)*
+***(Sorry if my English is not very good.)***
 
 ## 👤 Credits
 
